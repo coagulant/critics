@@ -1,0 +1,8 @@
+{
+  "ios": {
+    "python_object": "set",
+    "value": ["123"]},
+  "android": {
+    "python_object": "set",
+    "value": ["xxx", "yyyy"]}
+}

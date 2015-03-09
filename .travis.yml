@@ -1,0 +1,13 @@
+language: python
+
+python:
+  - "3.4"
+  - "3.3"
+  - "2.7"
+  - "pypy"
+
+install:
+  - pip install tox
+
+script:
+  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/'),flake8
