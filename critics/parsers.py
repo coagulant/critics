@@ -64,7 +64,9 @@ def get_android_reviews(app_id, limit=100):
     except IndexError:
         logger.error('Unexpected json for app_id=%s', app_id)
         return []
-    doc = html.fromstring(response_as_html)
+
+    utf8_parser = html.HTMLParser(encoding='utf-8')
+    doc = html.fromstring(response_as_html.encode('utf-8'), parser=utf8_parser)
     reviews_html = doc.cssselect('.single-review')
 
     def get_rating_from_html(review_html):

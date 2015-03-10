@@ -1,7 +1,7 @@
 # coding: utf-8
 import json
 try:
-    from urllib.parse import  parse_qs
+    from urllib.parse import parse_qs
 except ImportError:
     from urlparse import parse_qs
 
