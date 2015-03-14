@@ -28,9 +28,10 @@ class CriticApp(tornado.web.Application):
 
     def poll_store(self, platform, notify=True):
         for app_id in self.settings.get(platform):
-            self.poll_store_single_app(platform, app_id, notify)
+            for language in self.settings['language']:
+                self.poll_store_single_app(platform, app_id, language, notify)
 
-    def poll_store_single_app(self, platform, app_id, notify):
+    def poll_store_single_app(self, platform, app_id, language, notify):
         if platform not in self.fetchers.keys():
             raise Exception('Unknown platform %s', platform)
         fetcher = self.fetchers[platform]
@@ -38,7 +39,9 @@ class CriticApp(tornado.web.Application):
         new_reviews = []
         parsed_review_ids = self.reviews[platform]
         logging.debug('parsed_review_ids = %s', parsed_review_ids)
-        reviews = fetcher(app_id=app_id, limit=self.settings.get('parse_max_entries', None))
+        reviews = fetcher(app_id=app_id,
+                          language=language,
+                          limit=self.settings.get('parse_max_entries', None))
         for review in reviews:
             if review.id in parsed_review_ids:
                 continue
@@ -46,7 +49,9 @@ class CriticApp(tornado.web.Application):
             parsed_review_ids.add(review.id)
             new_reviews.append(review)
 
-        logger.info('%s: Fetched %s reviews, %s new', platform, len(reviews), len(new_reviews))
+        logger.info('%(platform)s: %(app_id)s: %(language)s: Fetched %(num_reviews)s reviews, %(new_reviews)s new',
+                    {'platform': platform, 'app_id': app_id, 'language': language,
+                     'num_reviews': len(reviews), 'new_reviews': len(new_reviews)})
 
         if new_reviews:
             self.send_messages(new_reviews, platform, notify)

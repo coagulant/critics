@@ -1,9 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 from functools import partial
+import locale
 import logging
 
 import click
+import pycountry
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
@@ -20,6 +22,7 @@ logger = logging.getLogger('critics')
 @click.option('--ios-channel', help='Slack channel for ios notifications')
 @click.option('--android', multiple=True, help='Android app name, e.g. "com.rovio.angrybirds"')
 @click.option('--android-channel', help='Slack channel for android notifications')
+@click.option('--language', multiple=True, help='ISO 639-1 name of reviews language')
 @click.option('--slack-webhook', help='Slack webhook absolute URL, required')
 @click.option('--parse-max-entries', default=10, help='Number of feed entries to look into')
 @click.option('--beat', default=300, help='Number of seconds between polling feed')
@@ -30,9 +33,13 @@ logger = logging.getLogger('critics')
 @click.option('--daemonize/--run-once', default=True)
 @click.option('--version', is_flag=True)
 def cli(**settings):
-    """Notify about new reviews in AppStore and Google Play in slack"""
+    """Notify about new reviews in AppStore and Google Play in slack.
+
+       By default reviews are fetched for system language only.
+    """
 
     setup_logging(settings)
+    settings = setup_languages(settings)
     app = CriticApp(**settings)
 
     if settings['version']:
@@ -82,6 +89,26 @@ def setup_logging(settings):
         logger.setLevel(logging.INFO)
     logger.debug(settings)
     logger.propagate = False
+
+
+def setup_languages(settings):
+    if not settings['language']:
+        try:
+            settings['language'] = [locale.getdefaultlocale()[0][:2]]
+        except ValueError:
+            settings['language'] = 'en'
+
+    languages = []
+    language_names = []
+    for lang_code in settings['language']:
+        try:
+            language_names.append(pycountry.languages.get(alpha2=lang_code).name)
+            languages.append(lang_code)
+        except KeyError:
+            raise click.ClickException('Unknown language code: %s' % lang_code)
+
+    logger.info('Languages: %s', ', '.join(language_names))
+    return settings
 
 
 def echo_channel_map(settings):

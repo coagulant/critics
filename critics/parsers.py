@@ -2,7 +2,6 @@
 from collections import namedtuple
 import json
 import datetime
-import locale
 import logging
 import re
 from time import mktime
@@ -35,14 +34,9 @@ class Review(namedtuple('Review',
         ))
 
 
-def get_ios_reviews(app_id, language=None, limit=100):
-    if not language:
-        try:
-            language = locale.getdefaultlocale()[0][:2]
-        except ValueError:
-            language = 'en'
+def get_ios_reviews(app_id, language, limit=100):
     url = 'https://itunes.apple.com/%(language)srss/customerreviews/id=%(app_id)s/sortBy=mostRecent/xml' % {
-        'language': '%s/' % language, 'app_id': app_id}
+        'language': '%s/' % language if language else '', 'app_id': app_id}
     response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)'},
                             timeout=1)
     response.encoding = 'utf-8'  # avoid chardet not guessing correctly
@@ -61,7 +55,7 @@ def get_ios_reviews(app_id, language=None, limit=100):
     return reviews
 
 
-def get_android_reviews(app_id, language=None, limit=100):
+def get_android_reviews(app_id, language, limit=100):
     url = 'https://play.google.com/store/getreviews'
     payload = {'xhr': 1, 'id': app_id, 'reviewSortOrder': 0, 'pageNum': 0, 'reviewType': 0}
     if language:

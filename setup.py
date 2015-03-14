@@ -53,7 +53,8 @@ requirements = [
     'cssselect',
     'feedparser',
     'click',
-    'pytils'
+    'pytils',
+    'pycountry'
 ]
 
 test_requirements = [

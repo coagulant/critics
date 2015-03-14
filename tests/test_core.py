@@ -7,7 +7,7 @@ from critics.parsers import Review
 
 def test_poll_store(tmpdir):
     fakemodel = tmpdir.join("fakemodel.json")
-    app = CriticApp(ios=['app1', 'app2'], persist=True, slack_webhook='http://www')
+    app = CriticApp(ios=['app1', 'app2'], language=['ru'], persist=True, slack_webhook='http://www')
     app.model_file = fakemodel.strpath
     fake_fetcher = Mock(return_value=[Review(
         id=u'xfkew4ytwqqddid:2e22wdad',

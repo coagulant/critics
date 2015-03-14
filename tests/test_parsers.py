@@ -39,7 +39,7 @@ def test_android_ru():
     responses.add(responses.POST, 'https://play.google.com/store/getreviews',
                   body=codecs.open('tests/fixtures/gp_ru.example', encoding='utf-8').read(),
                   content_type='application/json; charset=UTF-8')
-    reviews = get_android_reviews('com.skype.raider', limit=10)
+    reviews = get_android_reviews('com.skype.raider', language=None, limit=10)
 
     assert 'hl=en' not in responses.calls[0].request.body
     assert len(reviews) == 10
