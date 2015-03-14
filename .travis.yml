@@ -13,5 +13,5 @@ install:
 script:
   - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/'),flake8
 
-after_succcess:
+after_success:
   - coveralls
