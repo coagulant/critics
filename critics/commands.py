@@ -58,12 +58,12 @@ def cli(**settings):
         notify = False
 
     if settings['ios']:
-        logger.info('Tracking IOS apps: %s', ','.join(settings['ios']))
+        logger.info('Tracking IOS apps: %s', ', '.join(settings['ios']))
         itunes = tornado.ioloop.PeriodicCallback(partial(app.poll_store, 'ios'),
                                                  1000 * settings['beat'], loop)
         itunes.start()
     if settings['android']:
-        logger.info('Tracking Android apps: %s', ','.join(settings['android']))
+        logger.info('Tracking Android apps: %s', ', '.join(settings['android']))
         google_play = tornado.ioloop.PeriodicCallback(partial(app.poll_store, 'android'),
                                                       1000 * settings['beat'], loop)
         google_play.start()
@@ -87,7 +87,6 @@ def setup_logging(settings):
         handler.setFormatter(logging.Formatter('[%(asctime)s] %(message)s', "%Y-%m-%d %H:%M:%S"))
     else:
         logger.setLevel(logging.INFO)
-    logger.debug(settings)
     logger.propagate = False
 
 
