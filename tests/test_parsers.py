@@ -7,10 +7,10 @@ from critics.parsers import get_ios_reviews, get_android_reviews
 
 @responses.activate
 def test_ios():
-    responses.add(responses.GET, 'https://itunes.apple.com/ru/rss/customerreviews/id=123/sortBy=mostRecent/xml',
+    responses.add(responses.GET, 'https://itunes.apple.com/fr/rss/customerreviews/id=123/sortBy=mostRecent/xml',
                   body=codecs.open('tests/fixtures/itunes_fr.example', encoding='utf-8').read(),
                   content_type='application/xml; charset=UTF-8')
-    reviews = get_ios_reviews(123)
+    reviews = get_ios_reviews(123, language='fr')
 
     assert len(reviews) == 50
 
@@ -41,6 +41,7 @@ def test_android_ru():
                   content_type='application/json; charset=UTF-8')
     reviews = get_android_reviews('com.skype.raider', limit=10)
 
+    assert 'hl=en' not in responses.calls[0].request.body
     assert len(reviews) == 10
 
     review = reviews[0]
@@ -61,8 +62,9 @@ def test_android_en():
     responses.add(responses.POST, 'https://play.google.com/store/getreviews',
                   body=codecs.open('tests/fixtures/gp_en.example', encoding='utf-8').read(),
                   content_type='application/json; charset=UTF-8')
-    reviews = get_android_reviews('com.skype.raider', limit=10)
+    reviews = get_android_reviews('com.skype.raider', language='en', limit=10)
 
+    assert 'hl=en' in responses.calls[0].request.body
     assert len(reviews) == 10
 
     review = reviews[0]

@@ -42,6 +42,7 @@ class CriticApp(tornado.web.Application):
         for review in reviews:
             if review.id in parsed_review_ids:
                 continue
+            logger.debug(review)
             parsed_review_ids.add(review.id)
             new_reviews.append(review)
 
