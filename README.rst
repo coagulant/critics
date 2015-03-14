@@ -5,8 +5,13 @@ critics
 .. image:: https://img.shields.io/travis/coagulant/critics.svg
         :target: https://travis-ci.org/coagulant/critics
 
+.. image:: https://img.shields.io/coveralls/coagulant/critics.svg
+    :target: https://coveralls.io/r/coagulant/critics
+
 .. image:: https://img.shields.io/pypi/v/critics.svg
         :target: https://pypi.python.org/pypi/critics
+
+.. image:: https://img.shields.io/badge/licence-BSD-blue.svg
 
 ::
 

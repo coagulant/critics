@@ -1,12 +1,17 @@
 language: python
 
+sudo: false
+
 python:
   - "3.4"
   - "3.3"
   - "2.7"
 
 install:
-  - pip install tox
+  - pip install tox coveralls>=1.0a
 
 script:
   - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/'),flake8
+
+after_succcess:
+  - coveralls
