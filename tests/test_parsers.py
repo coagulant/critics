@@ -35,7 +35,7 @@ version=1.7"""
 
 
 @responses.activate
-def test_android():
+def test_android_ru():
     responses.add(responses.POST, 'https://play.google.com/store/getreviews',
                   body=codecs.open('tests/fixtures/gp_ru.example', encoding='utf-8').read(),
                   content_type='application/json; charset=UTF-8')
@@ -51,4 +51,23 @@ def test_android():
     assert review.url == u'https://play.google.com/store/apps/details?id=com.skype.raider&reviewId=Z3A6QU9xcFRPR1ZUcFVXUXlaSmhDYkY2ZHBHZmdXbm1hajk5MmFtMnVwb0NqOEl1cjFZb05LdWJBbE5fV19CelJZSEdoN3BkeEFlLUhESWRPVUV2YVJmcHc'  # noqa
     assert review.author == u'Polar Alexander'
     assert review.date == u'7 марта 2015 г.'
+    assert review.version is None
+
+    assert reviews[1].rating == 2
+
+
+@responses.activate
+def test_android_en():
+    responses.add(responses.POST, 'https://play.google.com/store/getreviews',
+                  body=codecs.open('tests/fixtures/gp_en.example', encoding='utf-8').read(),
+                  content_type='application/json; charset=UTF-8')
+    reviews = get_android_reviews('com.skype.raider', limit=10)
+
+    assert len(reviews) == 10
+
+    review = reviews[0]
+    assert review.id == u'gp:AOqpTOFuJk3lGt-xaYQLrp03KTe8eg7qs7Bm9wkUZQXQ1b2knLXIdpq1e9ZPM_AwCEa3szAZH9DDqWPbVE5qBQ'
+    assert review.title == u''
+    assert review.summary == u'I like skype'
+    assert review.date == u'March 14, 2015'
     assert review.version is None

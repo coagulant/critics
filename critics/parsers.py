@@ -55,7 +55,8 @@ def get_ios_reviews(app_id, limit=100):
 
 def get_android_reviews(app_id, limit=100):
     url = 'https://play.google.com/store/getreviews'
-    response = requests.post(url, data={'xhr': 1, 'id': app_id, 'reviewSortOrder': 0, 'pageNum': 0, 'reviewType': 0},
+    response = requests.post(url, data={'xhr': 1, 'id': app_id, 'reviewSortOrder': 0,
+                                        'pageNum': 0, 'reviewType': 0},
                              timeout=1)
     json_source = response.text[response.text.find('['):]
     response_as_json = json.loads(json_source)
@@ -70,8 +71,8 @@ def get_android_reviews(app_id, limit=100):
     reviews_html = doc.cssselect('.single-review')
 
     def get_rating_from_html(review_html):
-        string = review_html.cssselect('.star-rating-non-editable-container')[0].get('aria-label')
-        return int(re.search('(\d).+(\d)', string).group(1))
+        star_style = review_html.cssselect('.current-rating')[0].get('style')  # e.g. 'width: 20%'
+        return int(re.search('(\d+)%', star_style).group(1)) / 20
 
     reviews = [Review(
         id=review_html.cssselect('.review-header')[0].get('data-reviewid'),
