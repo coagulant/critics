@@ -12,7 +12,6 @@ install:
 
 script:
   - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . ) -- -a "\"--cov-report term-missing --cov critics\""
-  - tox -e flake8
 
 after_success:
   - coveralls

@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 from functools import partial
-import locale
 import logging
 
+from babel import Locale, UnknownLocaleError, default_locale
 import click
-import pycountry
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
@@ -93,17 +92,17 @@ def setup_logging(settings):
 def setup_languages(settings):
     if not settings['language']:
         try:
-            settings['language'] = [locale.getdefaultlocale()[0][:2]]
+            settings['language'] = [default_locale()[:2]]
         except ValueError:
-            settings['language'] = 'en'
+            settings['language'] = ['en']
 
     languages = []
     language_names = []
     for lang_code in settings['language']:
         try:
-            language_names.append(pycountry.languages.get(alpha2=lang_code).name)
+            language_names.append(Locale(lang_code).english_name)
             languages.append(lang_code)
-        except KeyError:
+        except UnknownLocaleError:
             raise click.ClickException('Unknown language code: %s' % lang_code)
 
     logger.info('Languages: %s', ', '.join(language_names))

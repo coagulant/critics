@@ -45,6 +45,18 @@ test-all:
 coverage:
 	py.test --cov-report term-missing --cov critics
 
+init:
+	pybabel init -i critics/locale/messages.pot -d critics/locale -l ${ARGS}
+
+extract:
+	pybabel extract -F critics/locale/babel.cfg -o critics/locale/messages.pot critics
+
+update:
+	pybabel update -i critics/locale/messages.pot -d critics/locale
+
+compile:
+	pybabel compile -d critics/locale
+
 release: clean
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload

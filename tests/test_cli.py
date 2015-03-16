@@ -2,10 +2,12 @@
 import json
 
 from click.testing import CliRunner
+import pytest
 
 from critics.commands import cli
 
 
+@pytest.mark.functional
 def test_args(tmpdir):
     model = tmpdir.join("reviews.json")
     runner = CliRunner()
@@ -35,6 +37,7 @@ def test_args(tmpdir):
                              'android: com.rovio.angrybirds: ru: Fetched 10 reviews, 10 new\n')
 
 
+@pytest.mark.functional
 def test_mutiple_languages(tmpdir):
     model = tmpdir.join("reviews.json")
     runner = CliRunner()

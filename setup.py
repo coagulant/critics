@@ -47,25 +47,24 @@ with open('CHANGELOG.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'requests',
-    'tornado',
-    'lxml',
-    'cssselect',
-    'feedparser',
-    'click',
-    'pytils',
-    'pycountry'
+    'requests>=2.6',
+    'tornado>=4.1',
+    'lxml>=3.4.2',
+    'cssselect>=0.9.1',
+    'feedparser>=5.1.3',
+    'click>=3.3',
+    'Babel>=1.3',
 ]
 
 test_requirements = [
-    'pytest',
-    'pytest-cov',
-    'responses'
+    'pytest>=2.6.4',
+    'pytest-cov>=1.8.1',
+    'responses>=0.3.0'
 ]
 
 setup(
     name='critics',
-    version='0.1.0',
+    version='0.2.0',
     description="Mobile reviews aggregator",
     long_description=readme + '\n\n' + history,
     author="Ilya Baryshev",
