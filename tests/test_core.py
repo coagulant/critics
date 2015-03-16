@@ -18,6 +18,7 @@ def test_poll_store(tmpdir):
         url=u'http://www',
         author=u'Here comes more BS',
         date='bull',
+        language='en',
         version=None
     )])
     app.fetchers['ios'] = fake_fetcher

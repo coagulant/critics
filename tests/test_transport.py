@@ -36,6 +36,7 @@ def test_slack(monkeypatch):
         url=u'http://www',
         author=u'Someauthor',
         date=datetime.datetime(2015, 1, 1, 6),
+        language='ru',
         version=None
     )], 'http://slack.hook/', channel=None)
 
@@ -66,6 +67,7 @@ def test_slack_locale(monkeypatch):
         url=u'http://www',
         author=u'Here comes more BS',
         date=datetime.datetime(2015, 1, 1, 6),
+        language=None,
         version='2.1.3'
     )], 'http://slack.hook/', channel=None)
 

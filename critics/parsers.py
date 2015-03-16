@@ -18,11 +18,13 @@ logger = logging.getLogger('critics')
 
 @python_2_unicode_compatible
 class Review(namedtuple('Review',
-                        ['id', 'platform', 'title', 'rating', 'summary', 'url', 'author', 'date', 'version'])):
+                        ['id', 'platform', 'title', 'rating', 'summary', 'url',
+                         'author', 'date', 'language', 'version'])):
     __slots__ = ()
 
     def __str__(self):
-        return (u'Review (%s):\ntitle=%s\nrating=%s\nsummary=%s\nurl=%s\nauthor=%s\ndate=%s\nversion=%s' % (
+        return (u'Review (%s):\ntitle=%s\nrating=%s\nsummary=%s\nurl=%s\n'
+                u'author=%s\ndate=%s\nlanguage=%s\nversion=%s' % (
             self.id,
             self.title,
             self.rating,
@@ -30,6 +32,7 @@ class Review(namedtuple('Review',
             self.url,
             self.author,
             self.date,
+            self.language,
             self.version
         ))
 
@@ -50,6 +53,7 @@ def get_ios_reviews(app_id, language, limit=100):
         url=entry.links[0].href,
         author=entry.author,  # author url: entry.href
         date=datetime.datetime.fromtimestamp(mktime(entry.updated_parsed)),
+        language=language,
         version=entry.im_version
     ) for entry in feed['entries'][1:1 + limit]]
     return reviews
@@ -86,6 +90,7 @@ def get_android_reviews(app_id, language, limit=100):
         url='https://play.google.com' + review_html.cssselect('.reviews-permalink')[0].get('href'),
         author=review_html.cssselect('.review-header .author-name')[0].text_content().strip(),
         date=review_html.cssselect('.review-header .review-date')[0].text_content().strip(),
+        language=language,
         version=None
     ) for review_html in reviews_html[:limit]]
     return reviews

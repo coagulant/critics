@@ -31,6 +31,7 @@ summary=Moi qui ne suis pas n grand amateur, j'ai adoré ce jeu malin et intuiti
 url=https://itunes.apple.com/fr/review?id=400274934&type=Purple%20Software
 author=Justine M18
 date=2015-03-05 20:05:00
+language=fr
 version=1.7"""
 
 
