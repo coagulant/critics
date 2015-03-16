@@ -19,7 +19,7 @@ def test_ios():
     assert review.title == u'Leon, super jeu'
     assert review.rating == 5
     assert review.summary == u'Moi qui ne suis pas n grand amateur, j\'ai adoré ce jeu malin et intuitif.'
-    assert review.url == u'https://itunes.apple.com/fr/review?id=400274934&type=Purple%20Software'
+    assert review.url == u'https://itunes.apple.com/fr/reviews/id270119737'
     assert review.author == u'Justine M18'
     assert review.date == datetime.datetime(2015, 3, 5, 20, 5)
     assert review.version == '1.7'
@@ -28,7 +28,7 @@ def test_ios():
 title=Leon, super jeu
 rating=5
 summary=Moi qui ne suis pas n grand amateur, j'ai adoré ce jeu malin et intuitif.
-url=https://itunes.apple.com/fr/review?id=400274934&type=Purple%20Software
+url=https://itunes.apple.com/fr/reviews/id270119737
 author=Justine M18
 date=2015-03-05 20:05:00
 language=fr
