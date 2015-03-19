@@ -25,16 +25,16 @@ class Review(namedtuple('Review',
     def __str__(self):
         return (u'Review (%s):\ntitle=%s\nrating=%s\nsummary=%s\nurl=%s\n'
                 u'author=%s\ndate=%s\nlanguage=%s\nversion=%s' % (
-            self.id,
-            self.title,
-            self.rating,
-            self.summary,
-            self.url,
-            self.author,
-            self.date,
-            self.language,
-            self.version
-        ))
+                    self.id,
+                    self.title,
+                    self.rating,
+                    self.summary,
+                    self.url,
+                    self.author,
+                    self.date,
+                    self.language,
+                    self.version
+                ))
 
 
 def get_ios_reviews(app_id, language, limit=100):
