@@ -18,13 +18,13 @@ logger = logging.getLogger('critics')
 
 @click.command()
 @click.option('--ios', multiple=True, help='ios app id, e.g. 122434343')
-@click.option('--ios-channel', help='Slack channel for ios notifications')
+@click.option('--ios-channel', help='Slack channel for ios notifications, optional')
 @click.option('--android', multiple=True, help='Android app name, e.g. "com.rovio.angrybirds"')
-@click.option('--android-channel', help='Slack channel for android notifications')
+@click.option('--android-channel', help='Slack channel for android notifications, optional')
 @click.option('--language', multiple=True, help='ISO 639-1 languages of review [default: system locale]')
 @click.option('--slack-webhook', help='Slack webhook absolute URL, required')
-@click.option('--parse-max-entries', default=10, help='Number of feed entries to look into')
-@click.option('--beat', default=300, help='Number of seconds between polling feed')
+@click.option('--parse-max-entries', default=10, help='Number of feed entries to look into [default: 10]')
+@click.option('--beat', default=300, help='Number of seconds between polling feed [default: 300]')
 @click.option('--verbose/--short', default=False)
 @click.option('--notify/--no-notify', default=True)
 @click.option('--persist/--no-persist', default=True)
@@ -34,7 +34,8 @@ logger = logging.getLogger('critics')
 def cli(**settings):
     """Notify about new reviews in AppStore and Google Play in slack.
 
-       By default reviews are fetched for system language only.
+       Launch command using supervisor or using screen/tmux/etc.
+       Reviews are fetched for multiple apps and languages in --beat=300 interval.
     """
 
     setup_logging(settings)

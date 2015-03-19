@@ -64,7 +64,7 @@ test_requirements = [
 
 setup(
     name='critics',
-    version='0.2.0',
+    version=get_version('critics'),
     description="Mobile reviews aggregator",
     long_description=readme + '\n\n' + history,
     author="Ilya Baryshev",
