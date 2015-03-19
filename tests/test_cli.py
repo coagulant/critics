@@ -4,6 +4,7 @@ import json
 from click.testing import CliRunner
 import pytest
 
+from critics import envvar_prefix
 from critics.commands import cli
 
 
@@ -19,7 +20,7 @@ def test_args(tmpdir):
                            env={'CRITICS_SLACK_WEBHOOK': 'http://httpbin.org/post',
                                 'CRITICS_IOS_CHANNEL': 'ios',
                                 'CRITICS_ANDROID_CHANNEL': 'android'},
-                           auto_envvar_prefix='CRITICS')
+                           auto_envvar_prefix=envvar_prefix)
     assert result.exit_code == 0
 
     # iOS rss feed returns either 10 or 0 reviews - probably a bug on Apple side,
@@ -43,9 +44,10 @@ def test_mutiple_languages(tmpdir):
     runner = CliRunner()
     result = runner.invoke(cli, ['--android', 'com.rovio.angrybirds',
                                  '--android', 'com.rovio.angrybirdsstarwarsii.ads',
-                                 '--language', 'ru', '--language', 'en',
                                  '--model', model.strpath,
-                                 '--run-once', '--no-notify'])
+                                 '--run-once', '--no-notify'],
+                           env={'CRITICS_LANGUAGE': 'ru en'},
+                           auto_envvar_prefix=envvar_prefix)
     assert result.exit_code == 0
     assert result.output == ('Languages: Russian, English\n'
                              'Tracking Android apps: com.rovio.angrybirds, com.rovio.angrybirdsstarwarsii.ads\n'
