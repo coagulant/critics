@@ -48,17 +48,28 @@ Examples
 Track English and Russian reviews for iOS and Android Angry Birds apps
 and post them to separate channels::
 
-    critics --ios=343200656 --android=com.rovio.angrybirds --slack-webhook=YOUR_SLACK_WEBHOOK_URL \
+    critics --ios=343200656 --android=com.rovio.angrybirds \
+            --slack-webhook=YOUR_SLACK_WEBHOOK_URL \
             --language=en --language=ru \
             --ios-channel="#ios_reviews" --android-channel="#android_reviews"
 
 Previous command, but using env variables::
 
-    CRITICS_IOS=343200656 CRITICS_ANDROID=com.rovio.angrybirds CRITICS_SLACK_WEBHOOK=YOUR_SLACK_WEBHOOK_URL \
-    CRITICS_LANGUAGE="en ru" CRITICS_IOS_CHANNEL="#ios_reviews" CRITICS_ANDROID_CHANNEL="#android_reviews" \
+    CRITICS_IOS=343200656 CRITICS_ANDROID=com.rovio.angrybirds \
+    CRITICS_SLACK_WEBHOOK=YOUR_SLACK_WEBHOOK_URL CRITICS_LANGUAGE="en ru" \
+    CRITICS_IOS_CHANNEL="#ios_reviews" CRITICS_ANDROID_CHANNEL="#android_reviews" \
     critics
 
-For demo purpose (does not require slack): parse ios feed for MyBook app and print reviews in stdout::
+For demo purpose (does not require slack): parse ios feed for MyBook app
+and print reviews in stdout::
 
     critics --ios=556540446 --run-once --no-notify --no-persist --verbose
 
+
+How it looks
+~~~~~~~~~~~~
+
+.. image:: https://github.com/coagulant/critics/raw/master/docs/screenshots/screenshot_01.png
+   :height: 356 px
+   :width: 492 px
+   :alt: Heroes HD Android reviews
