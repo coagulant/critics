@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+0.2.1 (2015-03-20)
+------------------
+* Change default request timeout to 5 seconds
+
 0.2.0 (2015-03-19)
 ------------------
 
