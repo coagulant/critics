@@ -3,6 +3,7 @@ from collections import namedtuple
 import json
 import datetime
 import logging
+import os
 import re
 from time import mktime
 
@@ -14,6 +15,7 @@ from .compat import python_2_unicode_compatible
 
 
 logger = logging.getLogger('critics')
+timeout = os.environ.get('CRITICS_TIMEOUT', 5)
 
 
 @python_2_unicode_compatible
@@ -41,7 +43,7 @@ def get_ios_reviews(app_id, language, limit=100):
     url = 'https://itunes.apple.com/%(language)srss/customerreviews/id=%(app_id)s/sortBy=mostRecent/xml' % {
         'language': '%s/' % language if language else '', 'app_id': app_id}
     response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)'},
-                            timeout=1)
+                            timeout=timeout)
     response.encoding = 'utf-8'  # avoid chardet not guessing correctly
     feed = feedparser.parse(response.text)
     reviews = [Review(
@@ -64,7 +66,7 @@ def get_android_reviews(app_id, language, limit=100):
     payload = {'xhr': 1, 'id': app_id, 'reviewSortOrder': 0, 'pageNum': 0, 'reviewType': 0}
     if language:
         payload['hl'] = language
-    response = requests.post(url, data=payload, timeout=1)
+    response = requests.post(url, data=payload, timeout=timeout)
     json_source = response.text[response.text.find('['):]
     response_as_json = json.loads(json_source)
     try:

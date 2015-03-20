@@ -17,7 +17,6 @@ class CriticApp(tornado.web.Application):
             'android': set(),
             'ios': set(),
         }
-        # self.model_file = 'reviews.json'
         self.fetchers = {
             'android': get_android_reviews,
             'ios': get_ios_reviews
