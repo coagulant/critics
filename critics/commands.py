@@ -94,7 +94,8 @@ def setup_languages(settings):
     if not settings['language']:
         try:
             settings['language'] = [default_locale()[:2]]
-        except ValueError:
+        except (ValueError, TypeError):
+            logger.warn('Unable to detect default locale, falling back to en')
             settings['language'] = ['en']
 
     languages = []
