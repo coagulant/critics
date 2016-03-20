@@ -3,9 +3,8 @@ language: python
 sudo: false
 
 python:
-  - "3.4"
-  - "3.3"
-  - "2.7"
+  - "3.5"
+  - "2.7.11"
 
 install:
   - pip install tox coveralls>=1.0a
