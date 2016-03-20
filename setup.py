@@ -54,6 +54,7 @@ requirements = [
     'feedparser>=5.1.3',
     'click>=3.3',
     'Babel>=1.3',
+    'prometheus_client>=0.0.13'
 ]
 
 test_requirements = [

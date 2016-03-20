@@ -1,12 +1,21 @@
-import os
 import json
 import logging
+import os
+
 import tornado.web
+from prometheus_client import Summary, Counter, Gauge
+
 from .parsers import get_android_reviews, get_ios_reviews
 from .transport import post2slack
 
-
 logger = logging.getLogger('critics')
+
+
+fetches = Summary('critics_fetches_seconds', 'Time spent, fetching data', ['platform'])
+notifications_counter = Counter('critics_notifications_total', 'How many chat messages sent', ['platform'])
+reviews_counter = Counter('critics_reviews_total', 'Number of new reviews fetched', ['platform'])
+last_scrape = Gauge('critics_last_run', 'Last time successful scrape')
+last_review = Gauge('critics_last_review', 'Last time new review fetched')
 
 
 class CriticApp(tornado.web.Application):
@@ -29,6 +38,7 @@ class CriticApp(tornado.web.Application):
         for app_id in self.settings.get(platform):
             for language in self.settings['language']:
                 self.poll_store_single_app(platform, app_id, language, notify)
+        last_scrape.set_to_current_time()
 
     def poll_store_single_app(self, platform, app_id, language, notify):
         if platform not in self.fetchers.keys():
@@ -38,9 +48,11 @@ class CriticApp(tornado.web.Application):
         new_reviews = []
         parsed_review_ids = self.reviews[platform]
         logging.debug('parsed_review_ids = %s', parsed_review_ids)
-        reviews = fetcher(app_id=app_id,
-                          language=language,
-                          limit=self.settings.get('parse_max_entries', None))
+        with fetches.labels({'platform': platform}).time():
+            reviews = fetcher(app_id=app_id,
+                              language=language,
+                              limit=self.settings.get('parse_max_entries', None))
+
         for review in reviews:
             if review.id in parsed_review_ids:
                 continue
@@ -53,6 +65,7 @@ class CriticApp(tornado.web.Application):
                      'num_reviews': len(reviews), 'new_reviews': len(new_reviews)})
 
         if new_reviews:
+            last_review.set_to_current_time()
             self.send_messages(new_reviews, platform, notify)
 
     def send_messages(self, new_reviews, platform, notify):
@@ -67,6 +80,8 @@ class CriticApp(tornado.web.Application):
         else:
             self.notifiers['slack'](new_reviews, self.settings['slack_webhook'], channel)
             logging.debug(new_reviews)
+            notifications_counter.labels({'platform': platform}).inc()
+            reviews_counter.labels({'platform': platform}).inc(len(new_reviews))
 
     def load_model(self):
         if not self.settings['persist']:

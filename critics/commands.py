@@ -8,6 +8,7 @@ import click
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
+from prometheus_client import start_http_server
 
 from .core import CriticApp
 import critics
@@ -30,6 +31,7 @@ logger = logging.getLogger('critics')
 @click.option('--persist/--no-persist', default=True)
 @click.option('--model', type=click.Path(), default='reviews.json')
 @click.option('--daemonize/--run-once', default=True)
+@click.option('--stats', default=9137, help='Port to serve prometheus stats [default: 9345]')
 @click.option('--version', is_flag=True)
 def cli(**settings):
     """Notify about new reviews in AppStore and Google Play in slack.
@@ -74,6 +76,11 @@ def cli(**settings):
         app.poll_store('ios', notify=notify)
     if settings['android']:
         app.poll_store('android', notify=notify)
+
+    if settings['stats']:
+        port = int(settings['stats'])
+        logger.debug('Serving metrics server on port %s' % port)
+        start_http_server(port)
 
     if settings['daemonize']:
         loop.start()
