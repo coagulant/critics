@@ -3,13 +3,14 @@
 from functools import partial
 import logging
 
-from babel import Locale, UnknownLocaleError, default_locale
+from babel import Locale, UnknownLocaleError
 import click
 import tornado.web
 import tornado.httpserver
 import tornado.ioloop
 from prometheus_client import start_http_server
 
+from .i18n import get_locale
 from .core import CriticApp
 import critics
 
@@ -99,11 +100,7 @@ def setup_logging(settings):
 
 def setup_languages(settings):
     if not settings['language']:
-        try:
-            settings['language'] = [default_locale()[:2]]
-        except (ValueError, TypeError):
-            logger.warn('Unable to detect default locale, falling back to en')
-            settings['language'] = ['en']
+        settings['language'] = [get_locale()[:2]]
 
     languages = []
     language_names = []

@@ -9,7 +9,7 @@ translations_dir = abspath(join(dirname(__file__), 'locale'))
 
 
 def get_locale():
-    return default_locale()
+    return default_locale() or 'en'
 
 
 def get_language():

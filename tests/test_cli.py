@@ -8,6 +8,12 @@ from critics import envvar_prefix
 from critics.commands import cli
 
 
+def test_no_locale():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--run-once'], env={'LC_CTYPE': '', 'LC_ALL': '', 'LANG': '', 'LANGUAGE': ''})
+    assert result.exit_code == 0
+
+
 @pytest.mark.functional
 def test_args(tmpdir):
     model = tmpdir.join("reviews.json")

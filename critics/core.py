@@ -78,10 +78,10 @@ class CriticApp(tornado.web.Application):
                 'platform': platform, 'num': len(new_reviews), 'channel': channel
             })
         else:
-            self.notifiers['slack'](new_reviews, self.settings['slack_webhook'], channel)
             logging.debug(new_reviews)
             notifications_counter.labels({'platform': platform}).inc()
             reviews_counter.labels({'platform': platform}).inc(len(new_reviews))
+            self.notifiers['slack'](new_reviews, self.settings['slack_webhook'], channel)
 
     def load_model(self):
         if not self.settings['persist']:
