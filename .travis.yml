@@ -4,13 +4,13 @@ sudo: false
 
 python:
   - "3.5"
-  - "2.7"
+  - "2.7.11"
 
 install:
   - pip install tox coveralls>=1.0a
 
 script:
-  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . ) -- -a "\"--cov-report term-missing --cov critics\""
+  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | cut -d '.' -f 1,2 | tr -d . ) -- -a "\"--cov-report term-missing --cov critics\""
 
 after_success:
   - coveralls
