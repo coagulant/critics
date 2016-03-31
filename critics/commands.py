@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
+from collections import OrderedDict
 from functools import partial
 import logging
+from itertools import chain, repeat
 
 from babel import Locale, UnknownLocaleError
 import click
@@ -20,9 +22,9 @@ logger = logging.getLogger('critics')
 
 @click.command()
 @click.option('--ios', multiple=True, help='ios app id, e.g. 122434343')
-@click.option('--ios-channel', help='Slack channel for ios notifications, optional')
+@click.option('--ios-channel', multiple=True, help='Slack channel for ios notifications, optional')
 @click.option('--android', multiple=True, help='Android app name, e.g. "com.rovio.angrybirds"')
-@click.option('--android-channel', help='Slack channel for android notifications, optional')
+@click.option('--android-channel', multiple=True, help='Slack channel for android notifications, optional')
 @click.option('--language', multiple=True, help='ISO 639-1 languages of review [default: system locale]')
 @click.option('--slack-webhook', help='Slack webhook absolute URL, required')
 @click.option('--parse-max-entries', default=10, help='Number of feed entries to look into [default: 10]')
@@ -43,7 +45,8 @@ def cli(**settings):
 
     setup_logging(settings)
     settings = setup_languages(settings)
-    app = CriticApp(**settings)
+    channels = setup_channel_map(settings)
+    app = CriticApp(**dict(settings, channels=channels))
 
     if settings['version']:
         click.echo('Version %s' % critics.__version__)
@@ -71,7 +74,7 @@ def cli(**settings):
                                                       1000 * settings['beat'], loop)
         google_play.start()
 
-    echo_channel_map(settings)
+    echo_channel_map(channels)
 
     if settings['ios']:
         app.poll_store('ios', notify=notify)
@@ -115,13 +118,29 @@ def setup_languages(settings):
     return settings
 
 
-def echo_channel_map(settings):
+def setup_channel_map(settings):
+    channel_map = OrderedDict()
     if not settings['slack_webhook']:
-        return
-    channel_map = ''
+        return channel_map
     if settings['ios'] and settings['ios_channel']:
-        channel_map += ' IOS -> %s  ' % settings['ios_channel']
+        channel_map['ios'] = {}
+        ios_channels = chain(settings['ios_channel'], repeat(settings['ios_channel'][-1]))
+        for app_id, channel in zip(settings['ios'], ios_channels):
+            channel_map['ios'][app_id] = channel
     if settings['android'] and settings['android_channel']:
-        channel_map += ' Android -> %s' % settings['android_channel']
-    if channel_map:
-        logger.info('Transport: slack channels:%s' % channel_map)
+        channel_map['android'] = {}
+        android_channels = chain(settings['android_channel'], repeat(settings['android_channel'][-1]))
+        for app_id, channel in zip(settings['android'], android_channels):
+            channel_map['android'][app_id] = channel
+    return channel_map
+
+
+def echo_channel_map(channel_map):
+    if not channel_map:
+        return
+    channel_output = ''
+    for platform, app_mapping in channel_map.items():
+        for app_id, channel in app_mapping.items():
+            channel_output += '   {app_id} -> {channel}'.format(
+                platform=platform, app_id=app_id, channel=channel)
+    logger.info('Transport: slack channels:%s' % channel_output)

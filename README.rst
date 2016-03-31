@@ -65,6 +65,11 @@ and print reviews in stdout::
 
     critics --ios=556540446 --run-once --no-notify --no-persist --verbose
 
+Monitor several ios apps to distinct slack channels::
+
+    critics --ios=343200656 --ios=343200657 \
+            --slack-webhook=YOUR_SLACK_WEBHOOK_URL \
+            --ios-channel="#ios_reviews_appA" --ios-channel="#ios_reviews_appB"
 
 How it looks
 ~~~~~~~~~~~~

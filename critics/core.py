@@ -33,6 +33,7 @@ class CriticApp(tornado.web.Application):
         self.notifiers = {
             'slack': post2slack
         }
+        self.channels = kwargs.get('channels', {})
 
     def poll_store(self, platform, notify=True):
         for app_id in self.settings.get(platform):
@@ -66,11 +67,15 @@ class CriticApp(tornado.web.Application):
 
         if new_reviews:
             last_review.set_to_current_time()
-            self.send_messages(new_reviews, platform, notify)
+            self.send_messages(new_reviews, platform, notify, app_id)
 
-    def send_messages(self, new_reviews, platform, notify):
+    def get_channel(self, platform, app_id):
+        platform_channels = self.channels.get(platform, {})
+        return platform_channels.get(app_id, None)
+
+    def send_messages(self, new_reviews, platform, notify, app_id):
         self.save_model()
-        channel = self.settings.get('%s_channel' % platform, None)
+        channel = self.get_channel(platform, app_id)
         if not notify:
             logger.debug('%s: Skip notification on first run', platform)
         elif not self.settings.get('notify', True):

@@ -24,8 +24,8 @@ def test_args(tmpdir):
                                  '--model', model.strpath,
                                  '--run-once'],
                            env={'CRITICS_SLACK_WEBHOOK': 'http://httpbin.org/post',
-                                'CRITICS_IOS_CHANNEL': 'ios',
-                                'CRITICS_ANDROID_CHANNEL': 'android'},
+                                'CRITICS_IOS_CHANNEL': '#ios',
+                                'CRITICS_ANDROID_CHANNEL': '#android'},
                            auto_envvar_prefix=envvar_prefix)
     assert result.exit_code == 0
 
@@ -39,7 +39,7 @@ def test_args(tmpdir):
     assert result.output == ('Languages: Russian\n'
                              'Tracking IOS apps: 343200656\n'
                              'Tracking Android apps: com.rovio.angrybirds\n'
-                             'Transport: slack channels: IOS -> ios   Android -> android\n'
+                             'Transport: slack channels:   343200656 -> #ios   com.rovio.angrybirds -> #android\n'
                              'ios: 343200656: ru: Fetched %s reviews, %s new\n' % (num_reviews_ios, num_reviews_ios) +
                              'android: com.rovio.angrybirds: ru: Fetched 10 reviews, 10 new\n')
 
