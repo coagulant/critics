@@ -1,6 +1,9 @@
 # coding: utf-8
 import json
-from mock import Mock
+try:
+    from unittest.mock import Mock
+except Exception:
+    from mock import Mock
 from critics.core import CriticApp
 from critics.parsers import Review
 
