@@ -14,3 +14,9 @@ script:
 
 after_success:
   - coveralls
+
+deploy:
+  provider: script
+  script: make travis-build-docker
+  on:
+    branch: master
