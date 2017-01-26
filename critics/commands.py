@@ -34,7 +34,7 @@ logger = logging.getLogger('critics')
 @click.option('--persist/--no-persist', default=True)
 @click.option('--model', type=click.Path(), default='reviews.json')
 @click.option('--daemonize/--run-once', default=True)
-@click.option('--stats', default=9137, help='Port to serve prometheus stats [default: 9345]')
+@click.option('--stats', default=9137, help='Port to serve prometheus stats [default: 9137]')
 @click.option('--version', is_flag=True)
 def cli(**settings):
     """Notify about new reviews in AppStore and Google Play in slack.

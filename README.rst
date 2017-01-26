@@ -38,6 +38,7 @@ critics
       --persist / --no-persist
       --model PATH
       --daemonize / --run-once
+      --stats INTEGER              Port to serve prometheus stats [default: 9137]
       --version
       --help                       Show this message and exit.
 
