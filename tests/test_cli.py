@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 
+import sys
 from click.testing import CliRunner
 import pytest
 
@@ -11,7 +12,8 @@ from critics.commands import cli
 def test_no_locale():
     runner = CliRunner()
     result = runner.invoke(cli, ['--run-once'], env={'LC_CTYPE': '', 'LC_ALL': '', 'LANG': '', 'LANGUAGE': ''})
-    assert result.exit_code == 0
+    exit_code = -1 if sys.version_info >= (3, 0) else 0  # click aborts if locale is not set up
+    assert result.exit_code == exit_code
 
 
 @pytest.mark.functional

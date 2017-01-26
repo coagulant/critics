@@ -47,14 +47,14 @@ with open('CHANGELOG.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'requests>=2.6',
-    'tornado>=4.1',
-    'lxml>=3.4.2',
-    'cssselect>=0.9.1',
-    'feedparser>=5.1.3',
+    'requests>=2.13',
+    'tornado>=4.4.2',
+    'lxml>=3.7.2',
+    'cssselect>=1.0.1',
+    'feedparser>=5.2.1',
     'click>=3.3',
-    'Babel>=1.3',
-    'prometheus_client>=0.0.13'
+    'Babel>=2.3.4',
+    'prometheus_client>=0.0.18'
 ]
 
 test_requirements = [
@@ -88,11 +88,10 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
     tests_require=test_requirements,

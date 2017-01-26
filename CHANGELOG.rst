@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+0.3.1 (2017-01-26)
+------------------
+* Fix test build and readme
+
+
 0.3.0 (2016-03-31)
 ------------------
 * Fix crashes when no locale env variables were set
