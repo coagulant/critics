@@ -8,5 +8,8 @@ WORKDIR /tmp/critics
 RUN pip install -e .
 
 EXPOSE 9137
+VOLUME [ "/critics" ]
+WORKDIR /critics
+RUN chown -R critics:critics /critics
 USER critics
 ENTRYPOINT [ "/usr/local/bin/critics" ]
