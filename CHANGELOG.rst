@@ -4,6 +4,7 @@ Changelog
 0.3.1 (2017-01-26)
 ------------------
 * Fix test build and readme
+* Add docker support
 
 
 0.3.0 (2016-03-31)
