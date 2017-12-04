@@ -9,7 +9,7 @@ install:
   - pip install codecov
   
 script: 
-  - tox -- "\"--cov=critics\""
+  - tox -- --addopts "\"--cov=critics\""
 
 after_success:
   - codecov
