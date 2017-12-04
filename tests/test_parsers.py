@@ -74,3 +74,12 @@ def test_android_en():
     assert review.summary == u'I like skype'
     assert review.date == u'March 14, 2015'
     assert review.version is None
+
+
+@responses.activate
+def test_android_empty():
+    responses.add(responses.POST, 'https://play.google.com/store/getreviews',
+                  body=codecs.open('tests/fixtures/gp_empty.example', encoding='utf-8').read(),
+                  content_type='application/json; charset=UTF-8')
+    reviews = get_android_reviews('ru.zvukislov', language='en')
+    assert len(reviews) == 0

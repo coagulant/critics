@@ -38,7 +38,12 @@ class CriticApp(tornado.web.Application):
     def poll_store(self, platform, notify=True):
         for app_id in self.settings.get(platform):
             for language in self.settings['language']:
-                self.poll_store_single_app(platform, app_id, language, notify)
+                try:
+                    self.poll_store_single_app(platform, app_id, language, notify)
+                except Exception:
+                    if self.sentry_client:
+                        self.sentry_client.captureException()
+                    raise
         last_scrape.set_to_current_time()
 
     def poll_store_single_app(self, platform, app_id, language, notify):

@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
+import logging
 from collections import OrderedDict
 from functools import partial
-import logging
 from itertools import chain, repeat
 
-from babel import Locale, UnknownLocaleError
 import click
-import tornado.web
 import tornado.httpserver
 import tornado.ioloop
+import tornado.web
+from babel import Locale, UnknownLocaleError
 from prometheus_client import start_http_server
+from raven import Client
 
-from .i18n import get_locale
-from .core import CriticApp
 import critics
-
+from .core import CriticApp
+from .i18n import get_locale
 
 logger = logging.getLogger('critics')
 
@@ -35,6 +35,7 @@ logger = logging.getLogger('critics')
 @click.option('--model', type=click.Path(), default='reviews.json')
 @click.option('--daemonize/--run-once', default=True)
 @click.option('--stats', default=9137, help='Port to serve prometheus stats [default: 9137]')
+@click.option('--sentry-dsn', help='DSN of Sentry instance to monitor exceptions')
 @click.option('--version', is_flag=True)
 def cli(**settings):
     """Notify about new reviews in AppStore and Google Play in slack.
@@ -42,11 +43,15 @@ def cli(**settings):
        Launch command using supervisor or using screen/tmux/etc.
        Reviews are fetched for multiple apps and languages in --beat=300 interval.
     """
-
     setup_logging(settings)
     settings = setup_languages(settings)
     channels = setup_channel_map(settings)
     app = CriticApp(**dict(settings, channels=channels))
+    if settings['sentry_dsn']:
+        app.sentry_client = Client(settings['sentry_dsn'])
+        logger.debug('Errors are reported to %s' % settings['sentry_dsn'])
+    else:
+        app.sentry_client = None
 
     if settings['version']:
         click.echo('Version %s' % critics.__version__)

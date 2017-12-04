@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.0.0 (-------TBA)
+------------------
+* Fix crash when app has no android reviews
+* Add sentry support via --sentry-dsn
+
 0.3.1 (2017-01-26)
 ------------------
 * Fix test build and readme
