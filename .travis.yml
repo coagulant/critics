@@ -1,18 +1,18 @@
 language: python
 
 python:
-  - "3.5"
+  - "2.7"
   - "3.6"  
 
-install:
-  - pip install "tox<2.5"
-  - pip install "coveralls>=1.0a"
-
-script:
-  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . ) -- -a "\"--cov-report term-missing --cov critics\""
+install: 
+  - pip install tox-travis
+  - pip install codecov
+  
+script: 
+  - tox -- "\"--cov=critics\""
 
 after_success:
-  - coveralls
+  - codecov
 
 deploy:
   provider: script

@@ -1,4 +1,4 @@
-FROM python:3.5-slim
+FROM python:3.6-slim
 MAINTAINER The MyBook Developers <dev@mybook.ru>
 
 RUN groupadd critics && useradd --no-create-home --gid critics critics

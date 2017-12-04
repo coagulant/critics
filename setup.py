@@ -11,27 +11,6 @@ except ImportError:
     from distutils.core import setup
 
 
-from setuptools.command.test import test as TestCommand
-
-
-class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
-
-
 def get_version(package):
     """
     Return package version as listed in `__version__` in `init.py`.
@@ -54,7 +33,8 @@ requirements = [
     'feedparser>=5.2.1',
     'click>=3.3',
     'Babel>=2.3.4',
-    'prometheus_client>=0.0.18'
+    'prometheus_client>=0.0.18',
+    'raven>=6.3.0',
 ]
 
 test_requirements = [
@@ -62,6 +42,10 @@ test_requirements = [
     'pytest-cov>=1.8.1',
     'responses>=0.3.0'
 ]
+
+needs_pytest = {'pytest', 'test'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
+
 
 setup(
     name='critics',
@@ -75,6 +59,7 @@ setup(
     package_dir={'critics': 'critics'},
     include_package_data=True,
     install_requires=requirements,
+    setup_requires=pytest_runner,
     entry_points="""
         [console_scripts]
         critics=critics:main
@@ -90,10 +75,8 @@ setup(
         "Programming Language :: Python :: 2",
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
     tests_require=test_requirements,
-    cmdclass={'test': PyTest},
 )
