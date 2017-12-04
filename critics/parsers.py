@@ -9,13 +9,14 @@ from time import mktime
 
 import feedparser
 import requests
-from lxml import html
+from lxml import html, etree
 
 from .compat import python_2_unicode_compatible
 
 
 logger = logging.getLogger('critics')
 timeout = os.environ.get('CRITICS_TIMEOUT', 5)
+utf8_parser = html.HTMLParser(encoding='utf-8')
 
 
 @python_2_unicode_compatible
@@ -72,12 +73,19 @@ def get_android_reviews(app_id, language, limit=100):
     try:
         response_as_html = response_as_json[0][2]
     except IndexError:
-        logger.error('Unexpected json for app_id=%s', app_id)
+        logger.error('Unexpected json for app_id=%s', app_id, exc_info=True)
         return []
 
-    utf8_parser = html.HTMLParser(encoding='utf-8')
-    doc = html.fromstring(response_as_html.encode('utf-8'), parser=utf8_parser)
-    reviews_html = doc.cssselect('.single-review')
+    # no reviews
+    if not response_as_html:
+        return []
+
+    try:
+        doc = html.fromstring(response_as_html.encode('utf-8'), parser=utf8_parser)
+        reviews_html = doc.cssselect('.single-review')
+    except etree.XMLSyntaxError:
+        logger.error('Unparsable html', exc_info=True)
+        return []
 
     def get_rating_from_html(review_html):
         star_style = review_html.cssselect('.current-rating')[0].get('style')  # e.g. 'width: 20%'
